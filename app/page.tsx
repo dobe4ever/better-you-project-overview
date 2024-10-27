@@ -1,113 +1,411 @@
-import Image from 'next/image';
+'use client'
 
-export default function Home() {
+import React, { useState } from 'react'
+import { ExternalLink, Github, MessageSquare, Plus, Edit2, Trash2 } from 'lucide-react'
+import { Card } from '@/components/ui/card'
+
+interface Deployment {
+  id: string
+  title: string
+  status: string
+  previewUrl: string
+  githubUrl: string
+  previewImage: string
+  timestamp: string
+  comments: Array<{
+    text: string
+    timestamp: string
+  }>
+}
+
+const DeploymentCard: React.FC<Deployment & {
+  onEdit: () => void
+  onDelete: () => void
+  onAddComment: (comment: string) => void
+}> = ({ 
+  title, 
+  status, 
+  previewUrl, 
+  githubUrl, 
+  previewImage, 
+  timestamp, 
+  comments = [],
+  onEdit,
+  onDelete,
+  onAddComment
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [newComment, setNewComment] = useState('')
+
+  const formattedDate = new Date(timestamp).toLocaleString()
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <Card className="w-full mb-4 overflow-hidden">
+      <div className="border-b border-gray-200">
+        <div className="flex items-center justify-between p-4">
+          <div 
+            className="flex items-center flex-grow space-x-4 cursor-pointer hover:bg-gray-50"
+            onClick={(e) => {
+              if (!(e.target as HTMLElement).closest('a, button')) {
+                setIsExpanded(!isExpanded);
+              }
+            }}
           >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+            <div className="relative w-16 h-16 flex-shrink-0">
+              <img 
+                src={'https://i.pravatar.cc/128'} 
+                alt={`Preview of ${title}`}
+                className="absolute inset-0 w-full h-full object-cover rounded-md"
+              />
+            </div>
+            
+            <div className="flex-grow">
+              <div className="flex items-center space-x-2 mb-2">
+                <span className="text-lg">{status}</span>
+                <h3 className="text-lg font-medium truncate">{title}</h3>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <a
+              href={previewUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center px-3 py-1 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(previewUrl, '_blank');
+              }}
+            >
+              <ExternalLink className="w-3 h-3 mr-1" />
+              Visit
+            </a>
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(githubUrl, '_blank');
+              }}
+            >
+              <Github className="w-3 h-3 mr-1" />
+              GitHub
+            </a>
+            <button
+              onClick={onEdit}
+              className="p-1 text-gray-500 hover:text-blue-500 transition-colors"
+            >
+              <Edit2 className="w-4 h-4" />
+            </button>
+            <button
+              onClick={onDelete}
+              className="p-1 text-gray-500 hover:text-red-500 transition-colors"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+      {isExpanded && (
+        <div className="p-4">
+          <div className="relative aspect-square w-full max-w-md mx-auto mb-4">
+            <img 
+              src={'https://i.pravatar.cc/128'} 
+              alt={`Preview of ${title}`}
+              className="absolute inset-0 w-full h-full object-cover rounded-md"
+            />
+          </div>
+
+          <div className="text-sm text-gray-500 mb-4">
+            Last updated: {formattedDate}
+          </div>
+
+          <div className="mt-4">
+            <h3 className="flex items-center text-lg font-medium mb-3">
+              <MessageSquare className="w-5 h-5 mr-2" />
+              Comments
+            </h3>
+            <div className="space-y-3">
+              {comments.map((comment, index) => (
+                <div key={index} className="p-3 bg-gray-50 rounded-md">
+                  <div className="text-sm text-gray-500 mb-1">
+                    {new Date(comment.timestamp).toLocaleString()}
+                  </div>
+                  <div className="text-gray-700">{comment.text}</div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-4">
+              <textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Add a comment..."
+                className="w-full p-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                rows={3}
+              />
+              <button
+                onClick={() => {
+                  if (newComment.trim()) {
+                    onAddComment(newComment.trim())
+                    setNewComment('')
+                  }
+                }}
+                className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+              >
+                Add Comment
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </Card>
+  )
+}
+
+const CardForm: React.FC<{
+  deployment?: Omit<Deployment, 'id' | 'timestamp' | 'comments'>
+  onSubmit: (formData: Omit<Deployment, 'id' | 'timestamp' | 'comments'>) => void
+  onCancel: () => void
+}> = ({ deployment, onSubmit, onCancel }) => {
+  const [formData, setFormData] = useState({
+    title: deployment?.title || '',
+    status: deployment?.status || '🟢',
+    previewUrl: deployment?.previewUrl || '',
+    githubUrl: deployment?.githubUrl || '',
+    previewImage: deployment?.previewImage || '/placeholder.svg?height=400&width=400',
+  })
+
+  return (
+    <Card className="w-full mb-4 p-4">
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium mb-1">Title</label>
+          <input
+            type="text"
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            className="w-full p-2 border rounded-md"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Status</label>
+          <select
+            value={formData.status}
+            onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+            className="w-full p-2 border rounded-md"
+          >
+            <option value="🟢">🟢 Live</option>
+            <option value="🟡">🟡 In Progress</option>
+            <option value="🔴">🔴 Archived</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Preview URL</label>
+          <input
+            type="url"
+            value={formData.previewUrl}
+            onChange={(e) => setFormData({ ...formData, previewUrl: e.target.value })}
+            className="w-full p-2 border rounded-md"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">GitHub URL</label>
+          <input
+            type="url"
+            value={formData.githubUrl}
+            onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
+            className="w-full p-2 border rounded-md"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Preview Image URL</label>
+          <input
+            type="url"
+            value={formData.previewImage}
+            onChange={(e) => setFormData({ ...formData, previewImage: e.target.value })}
+            className="w-full p-2 border rounded-md"
+          />
+        </div>
+        <div className="flex space-x-2">
+          <button
+            onClick={() => onSubmit(formData)}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          >
+            Save
+          </button>
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </Card>
+  )
+}
+
+export default function DeploymentDashboard() {
+  const [deployments, setDeployments] = useState<Deployment[]>([
+    {
+      id: '1',
+      title: "Main App",
+      status: "🟢",
+      previewUrl: "https://betteryoueveryday.vercel.app/",
+      githubUrl: "#",
+      previewImage: "/placeholder.svg?height=400&width=400",
+      timestamp: new Date().toISOString(),
+      comments: [
+        {
+          text: "Latest production build",
+          timestamp: new Date().toISOString()
+        }
+      ]
+    },
+    {
+      id: '2',
+      title: "New header design (in progress)",
+      status: "🟡",
+      previewUrl: "https://vitejs-node-ts-tailwind-better-y-git-30f03f-dobe4evers-projects.vercel.app/",
+      githubUrl: "#",
+      previewImage: "/placeholder.svg?height=400&width=400",
+      timestamp: new Date().toISOString(),
+      comments: []
+    },
+    {
+      id: '3',
+      title: "Search box header (old)",
+      status: "🔴",
+      previewUrl:  "https://better-you-everyday-k9qarfpjo-dobe4evers-projects.vercel.app/",
+      githubUrl: "#",
+      previewImage: "/placeholder.svg?height=400&width=400",
+      timestamp: new Date().toISOString(),
+      comments: []
+    }
+  ])
+
+  const [showForm, setShowForm] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
+
+  const handleAddCard = (formData: Omit<Deployment, 'id' | 'timestamp' | 'comments'>) => {
+    const newDeployment: Deployment = {
+      ...formData,
+      id: Date.now().toString(),
+      timestamp: new Date().toISOString(),
+      comments: []
+    }
+    setDeployments([...deployments, newDeployment])
+    setShowForm(false)
+  }
+
+  const handleEditCard = (id: string) => {
+    setEditingId(id)
+  }
+
+  const handleUpdateCard = (formData: Omit<Deployment, 'id' | 'timestamp' | 'comments'>) => {
+    const updatedDeployments = deployments.map(deployment => 
+      deployment.id === editingId 
+        ? { ...deployment, ...formData, timestamp: new Date().toISOString() }
+        : deployment
+    )
+    setDeployments(updatedDeployments)
+    setEditingId(null)
+  }
+
+  const handleDeleteCard = (id: string) => {
+    if (window.confirm('Are you sure you want to delete this deployment?')) {
+      const updatedDeployments = deployments.filter(deployment => deployment.id !== id)
+      setDeployments(updatedDeployments)
+    }
+  }
+
+  const handleAddComment = (id: string, comment: string) => {
+    const updatedDeployments = deployments.map(deployment => 
+      deployment.id === id 
+        ? { 
+            ...deployment, 
+            comments: [
+              ...deployment.comments, 
+              { text: comment, timestamp: new Date().toISOString() }
+            ]
+          }
+        : deployment
+    )
+    setDeployments(updatedDeployments)
+  }
+
+  const mainApp = deployments.slice(0, 1)
+  const branches = deployments.slice(1)
+
+  return (
+    <div className="max-w-2xl mx-auto p-4">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Deployment Previews</h1>
+        <button
+          onClick={() => setShowForm(true)}
+          className="flex items-center px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        >
+          <Plus className="w-4 h-4 mr-1" />
+          Add Deployment
+        </button>
+      </div>
+
+      {showForm && (
+        <CardForm
+          onSubmit={handleAddCard}
+          onCancel={() => setShowForm(false)}
         />
+      )}
+
+      {/* Main App Section */}
+      <div className="mb-8">
+        {mainApp.map((deployment) => (
+          editingId === deployment.id ? (
+            <CardForm
+              key={deployment.id}
+              deployment={deployment}
+              onSubmit={handleUpdateCard}
+              onCancel={() => setEditingId(null)}
+            />
+          ) : (
+            <DeploymentCard
+              key={deployment.id}
+              {...deployment}
+              onEdit={() => handleEditCard(deployment.id)}
+              onDelete={() => handleDeleteCard(deployment.id)}
+              onAddComment={(comment) => handleAddComment(deployment.id, comment)}
+            />
+          )
+        ))}
       </div>
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      {/* Active Branches Section */}
+      <h2 className="text-xl font-semibold mb-4">Active Branches</h2>
+      <div className="space-y-4">
+        {branches.map((deployment) => (
+          editingId === deployment.id ? (
+            <CardForm
+              key={deployment.id}
+              deployment={deployment}
+              onSubmit={handleUpdateCard}
+              onCancel={() => setEditingId(null)}
+            />
+          ) : (
+            <DeploymentCard
+              key={deployment.id}
+              {...deployment}
+              onEdit={() => handleEditCard(deployment.id)}
+              onDelete={() => handleDeleteCard(deployment.id)}
+              onAddComment={(comment) => handleAddComment(deployment.id, comment)}
+            />
+          )
+        ))}
       </div>
-    </main>
-  );
+    </div>
+  )
 }
