@@ -45,8 +45,7 @@ export default function DeploymentDashboard() {
           text: "Latest production build",
           timestamp: "2023-10-27T11:06:38.000Z"
         }
-      ],
-      githubUrl: ''
+      ]
     },
     {
       id: '2',
@@ -55,8 +54,7 @@ export default function DeploymentDashboard() {
       previewUrl: "https://vitejs-node-ts-tailwind-better-y-git-30f03f-dobe4evers-projects.vercel.app/",
       previewImage: "https://i.ibb.co/JmvrN4H/image.png",
       timestamp: "2023-10-27T11:06:38.000Z",
-      comments: [],
-      githubUrl: ''
+      comments: []
     },
     {
       id: '3',
@@ -65,8 +63,7 @@ export default function DeploymentDashboard() {
       previewUrl: "https://better-you-everyday-k9qarfpjo-dobe4evers-projects.vercel.app/",
       previewImage: "https://i.ibb.co/C9SWMVy/image.png",
       timestamp: "2023-10-27T11:06:38.000Z",
-      comments: [],
-      githubUrl: ''
+      comments: []
     }
   ])
 

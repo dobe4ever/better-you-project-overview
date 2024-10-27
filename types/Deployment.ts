@@ -3,7 +3,6 @@ export interface Deployment {
     title: string
     status: string
     previewUrl: string
-    githubUrl: string
     previewImage: string
     timestamp: string
     comments: Array<{
