@@ -27,7 +27,7 @@ export default function DeploymentDashboard() {
     },
     {
       id: '2',
-      title: "New header design (in progress)",
+      title: "New header design",
       status: "🟡",
       previewUrl: "https://vitejs-node-ts-tailwind-better-y-git-30f03f-dobe4evers-projects.vercel.app/",
       githubUrl: "#",
@@ -37,7 +37,7 @@ export default function DeploymentDashboard() {
     },
     {
       id: '3',
-      title: "Search box header (old)",
+      title: "Old search box header",
       status: "🔴",
       previewUrl: "https://better-you-everyday-k9qarfpjo-dobe4evers-projects.vercel.app/",
       githubUrl: "#",
