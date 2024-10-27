@@ -46,7 +46,7 @@ export const CardForm: React.FC<CardFormProps> = ({ deployment, onSubmit, onCanc
               <SelectValue placeholder="Select status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="🟢">🟢 Live</SelectItem>
+              <SelectItem value="🟢">🟢 Ready</SelectItem>
               <SelectItem value="🟡">🟡 In Progress</SelectItem>
               <SelectItem value="🔴">🔴 Archived</SelectItem>
             </SelectContent>
