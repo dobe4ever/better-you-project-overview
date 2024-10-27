@@ -1,8 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { ExternalLink, Github, MessageSquare, Plus, Edit2, Trash2 } from 'lucide-react'
-import { Card } from '@/components/ui/card'
+import { ExternalLink, Github, MessageSquare, Plus, Edit2, Trash2, ChevronDown, ChevronUp } from 'lucide-react'
 
 interface Deployment {
   id: string
@@ -40,20 +39,16 @@ const DeploymentCard: React.FC<Deployment & {
   const formattedDate = new Date(timestamp).toLocaleString()
 
   return (
-    <Card className="w-full mb-4 overflow-hidden">
+    <div className="w-full mb-6 bg-white rounded-lg shadow-md overflow-hidden">
       <div className="border-b border-gray-200">
         <div className="flex items-center justify-between p-4">
           <div 
             className="flex items-center flex-grow space-x-4 cursor-pointer hover:bg-gray-50"
-            onClick={(e) => {
-              if (!(e.target as HTMLElement).closest('a, button')) {
-                setIsExpanded(!isExpanded);
-              }
-            }}
+            onClick={() => setIsExpanded(!isExpanded)}
           >
             <div className="relative w-16 h-16 flex-shrink-0">
               <img 
-                src={'https://i.pravatar.cc/128'} 
+                src={previewImage} 
                 alt={`Preview of ${title}`}
                 className="absolute inset-0 w-full h-full object-cover rounded-md"
               />
@@ -62,8 +57,9 @@ const DeploymentCard: React.FC<Deployment & {
             <div className="flex-grow">
               <div className="flex items-center space-x-2 mb-2">
                 <span className="text-lg">{status}</span>
-                <h3 className="text-lg font-medium truncate">{title}</h3>
+                <h3 className="text-lg font-medium">{title}</h3>
               </div>
+              <p className="text-sm text-gray-500">Last updated: {formattedDate}</p>
             </div>
           </div>
 
@@ -73,10 +69,6 @@ const DeploymentCard: React.FC<Deployment & {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center px-3 py-1 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 transition-colors"
-              onClick={(e) => {
-                e.stopPropagation();
-                window.open(previewUrl, '_blank');
-              }}
             >
               <ExternalLink className="w-3 h-3 mr-1" />
               Visit
@@ -86,10 +78,6 @@ const DeploymentCard: React.FC<Deployment & {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center px-3 py-1 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-900 transition-colors"
-              onClick={(e) => {
-                e.stopPropagation();
-                window.open(githubUrl, '_blank');
-              }}
             >
               <Github className="w-3 h-3 mr-1" />
               GitHub
@@ -106,22 +94,22 @@ const DeploymentCard: React.FC<Deployment & {
             >
               <Trash2 className="w-4 h-4" />
             </button>
+            {isExpanded ? 
+              <ChevronUp className="w-5 h-5 text-gray-500 flex-shrink-0" /> : 
+              <ChevronDown className="w-5 h-5 text-gray-500 flex-shrink-0" />
+            }
           </div>
         </div>
       </div>
 
       {isExpanded && (
         <div className="p-4">
-          <div className="relative aspect-square w-full max-w-md mx-auto mb-4">
+          <div className="relative w-full h-0 pb-[56.25%] mb-4">
             <img 
-              src={'https://i.pravatar.cc/128'} 
-              alt={`Preview of ${title}`}
-              className="absolute inset-0 w-full h-full object-cover rounded-md"
+              src={previewImage} 
+              alt={`Full preview of ${title}`}
+              className="absolute inset-0 w-full h-full object-contain"
             />
-          </div>
-
-          <div className="text-sm text-gray-500 mb-4">
-            Last updated: {formattedDate}
           </div>
 
           <div className="mt-4">
@@ -163,7 +151,7 @@ const DeploymentCard: React.FC<Deployment & {
           </div>
         </div>
       )}
-    </Card>
+    </div>
   )
 }
 
@@ -177,76 +165,79 @@ const CardForm: React.FC<{
     status: deployment?.status || '🟢',
     previewUrl: deployment?.previewUrl || '',
     githubUrl: deployment?.githubUrl || '',
-    previewImage: deployment?.previewImage || '/placeholder.svg?height=400&width=400',
+    previewImage: deployment?.previewImage || 'https://i.ibb.co/Gs1VTpj/image.png',
   })
 
   return (
-    <Card className="w-full mb-4 p-4">
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-1">Title</label>
-          <input
-            type="text"
-            value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            className="w-full p-2 border rounded-md"
-          />
+    <div className="w-full mb-6 bg-white rounded-lg shadow-md overflow-hidden">
+      <div className="p-4">
+        <h2 className="text-xl font-semibold mb-4">{deployment ? 'Edit Deployment' : 'Add New Deployment'}</h2>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Title</label>
+            <input
+              type="text"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              className="w-full p-2 border rounded-md"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Status</label>
+            <select
+              value={formData.status}
+              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+              className="w-full p-2 border rounded-md"
+            >
+              <option value="🟢">🟢 Live</option>
+              <option value="🟡">🟡 In Progress</option>
+              <option value="🔴">🔴 Archived</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Preview URL</label>
+            <input
+              type="url"
+              value={formData.previewUrl}
+              onChange={(e) => setFormData({ ...formData, previewUrl: e.target.value })}
+              className="w-full p-2 border rounded-md"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">GitHub URL</label>
+            <input
+              type="url"
+              value={formData.githubUrl}
+              onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
+              className="w-full p-2 border rounded-md"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Preview Image URL</label>
+            <input
+              type="url"
+              value={formData.previewImage}
+              onChange={(e) => setFormData({ ...formData, previewImage: e.target.value })}
+              className="w-full p-2 border rounded-md"
+            />
+          </div>
         </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Status</label>
-          <select
-            value={formData.status}
-            onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-            className="w-full p-2 border rounded-md"
-          >
-            <option value="🟢">🟢 Live</option>
-            <option value="🟡">🟡 In Progress</option>
-            <option value="🔴">🔴 Archived</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Preview URL</label>
-          <input
-            type="url"
-            value={formData.previewUrl}
-            onChange={(e) => setFormData({ ...formData, previewUrl: e.target.value })}
-            className="w-full p-2 border rounded-md"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">GitHub URL</label>
-          <input
-            type="url"
-            value={formData.githubUrl}
-            onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
-            className="w-full p-2 border rounded-md"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Preview Image URL</label>
-          <input
-            type="url"
-            value={formData.previewImage}
-            onChange={(e) => setFormData({ ...formData, previewImage: e.target.value })}
-            className="w-full p-2 border rounded-md"
-          />
-        </div>
-        <div className="flex space-x-2">
-          <button
-            onClick={() => onSubmit(formData)}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-          >
-            Save
-          </button>
+        <div className="flex justify-end space-x-2 mt-4">
           <button
             onClick={onCancel}
             className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
           >
             Cancel
           </button>
+          <button
+            onClick={() => onSubmit(formData)}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          >
+            Save
+          </button>
         </div>
       </div>
-    </Card>
+    </div>
   )
 }
 
@@ -258,12 +249,12 @@ export default function DeploymentDashboard() {
       status: "🟢",
       previewUrl: "https://betteryoueveryday.vercel.app/",
       githubUrl: "#",
-      previewImage: "/placeholder.svg?height=400&width=400",
-      timestamp: new Date().toISOString(),
+      previewImage: "https://i.ibb.co/Gs1VTpj/image.png",
+      timestamp: "2023-10-27T11:06:38.000Z",
       comments: [
         {
           text: "Latest production build",
-          timestamp: new Date().toISOString()
+          timestamp: "2023-10-27T11:06:38.000Z"
         }
       ]
     },
@@ -273,18 +264,18 @@ export default function DeploymentDashboard() {
       status: "🟡",
       previewUrl: "https://vitejs-node-ts-tailwind-better-y-git-30f03f-dobe4evers-projects.vercel.app/",
       githubUrl: "#",
-      previewImage: "/placeholder.svg?height=400&width=400",
-      timestamp: new Date().toISOString(),
+      previewImage: "https://i.ibb.co/JmvrN4H/image.png",
+      timestamp: "2023-10-27T11:06:38.000Z",
       comments: []
     },
     {
       id: '3',
       title: "Search box header (old)",
       status: "🔴",
-      previewUrl:  "https://better-you-everyday-k9qarfpjo-dobe4evers-projects.vercel.app/",
+      previewUrl: "https://better-you-everyday-k9qarfpjo-dobe4evers-projects.vercel.app/",
       githubUrl: "#",
-      previewImage: "/placeholder.svg?height=400&width=400",
-      timestamp: new Date().toISOString(),
+      previewImage: "https://i.ibb.co/C9SWMVy/image.png",
+      timestamp: "2023-10-27T11:06:38.000Z",
       comments: []
     }
   ])
@@ -343,7 +334,7 @@ export default function DeploymentDashboard() {
   const branches = deployments.slice(1)
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
+    <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Deployment Previews</h1>
         <button
@@ -364,6 +355,7 @@ export default function DeploymentDashboard() {
 
       {/* Main App Section */}
       <div className="mb-8">
+        <h2 className="text-xl font-semibold mb-4">Main App</h2>
         {mainApp.map((deployment) => (
           editingId === deployment.id ? (
             <CardForm
@@ -384,9 +376,10 @@ export default function DeploymentDashboard() {
         ))}
       </div>
 
-      {/* Active Branches Section */}
+      {/* 
+ Active Branches Section */}
       <h2 className="text-xl font-semibold mb-4">Active Branches</h2>
-      <div className="space-y-4">
+      <div className="space-y-6">
         {branches.map((deployment) => (
           editingId === deployment.id ? (
             <CardForm
