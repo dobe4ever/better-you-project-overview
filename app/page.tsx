@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { DeploymentCard } from '@/components/DeploymentCard'
 import { CardForm } from '@/components/CardForm'
 import { Deployment } from '@/types/Deployment'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 export default function DeploymentDashboard() {
   const [deployments, setDeployments] = useState<Deployment[]>([
@@ -100,68 +101,70 @@ export default function DeploymentDashboard() {
   const branches = deployments.slice(1)
 
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Deployment Previews</h1>
-        <Button onClick={() => 
-         setShowForm(true)}>
+    <div className="max-w-md mx-auto p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-xl font-bold">Deployment Previews</h1>
+        <Button size="sm" onClick={() => setShowForm(true)}>
           <Plus className="mr-2 h-4 w-4" />
-          Add Deployment
+          Add
         </Button>
       </div>
 
-      {showForm && (
-        <CardForm
-          onSubmit={handleAddCard}
-          onCancel={() => setShowForm(false)}
-        />
-      )}
+      <ScrollArea className="h-[calc(100vh-6rem)] pr-4">
+        {showForm && (
+          <CardForm
+            onSubmit={handleAddCard}
+            onCancel={() => setShowForm(false)}
+          />
+        )}
 
-      {/* Main App Section */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Main App</h2>
-        {mainApp.map((deployment) => (
-          editingId === deployment.id ? (
-            <CardForm
-              key={deployment.id}
-              deployment={deployment}
-              onSubmit={handleUpdateCard}
-              onCancel={() => setEditingId(null)}
-            />
-          ) : (
-            <DeploymentCard
-              key={deployment.id}
-              {...deployment}
-              onEdit={() => handleEditCard(deployment.id)}
-              onDelete={() => handleDeleteCard(deployment.id)}
-              onAddComment={(comment) => handleAddComment(deployment.id, comment)}
-            />
-          )
-        ))}
-      </div>
+        {/* Main App Section */}
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold mb-2">Main App</h2>
+          {mainApp.map((deployment) => (
+            editingId === deployment.id ? (
+              <CardForm
+                key={deployment.id}
+                deployment={deployment}
+                onSubmit={handleUpdateCard}
+                onCancel={() => setEditingId(null)}
+              
+              />
+            ) : (
+              <DeploymentCard
+                key={deployment.id}
+                {...deployment}
+                onEdit={() => handleEditCard(deployment.id)}
+                onDelete={() => handleDeleteCard(deployment.id)}
+                onAddComment={(comment) => handleAddComment(deployment.id, comment)}
+              />
+            )
+          ))}
+        </div>
 
-      {/* Active Branches Section */}
-      <h2 className="text-xl font-semibold mb-4">Active Branches</h2>
-      <div className="space-y-6">
-        {branches.map((deployment) => (
-          editingId === deployment.id ? (
-            <CardForm
-              key={deployment.id}
-              deployment={deployment}
-              onSubmit={handleUpdateCard}
-              onCancel={() => setEditingId(null)}
-            />
-          ) : (
-            <DeploymentCard
-              key={deployment.id}
-              {...deployment}
-              onEdit={() => handleEditCard(deployment.id)}
-              onDelete={() => handleDeleteCard(deployment.id)}
-              onAddComment={(comment) => handleAddComment(deployment.id, comment)}
-            />
-          )
-        ))}
-      </div>
+        {/* Active Branches Section */}
+        <h2 className="text-lg font-semibold mb-2">Active Branches</h2>
+        <div className="space-y-4">
+          {branches.map((deployment) => (
+            editingId === deployment.id ? (
+              <CardForm
+                key={deployment.id}
+                deployment={deployment}
+                onSubmit={handleUpdateCard}
+                onCancel={() => setEditingId(null)}
+              />
+            ) : (
+              <DeploymentCard
+                key={deployment.id}
+                {...deployment}
+                onEdit={() => handleEditCard(deployment.id)}
+                onDelete={() => handleDeleteCard(deployment.id)}
+                onAddComment={(comment) => handleAddComment(deployment.id, comment)}
+              />
+            )
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   )
 }
