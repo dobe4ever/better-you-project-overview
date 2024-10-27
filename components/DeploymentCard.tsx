@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ExternalLink, Github, MessageSquare, ChevronDown, ChevronUp, Edit2, Trash2 } from 'lucide-react'
+import { ExternalLink, MessageSquare, ChevronDown, ChevronUp, Edit2, Trash2 } from 'lucide-react'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -16,7 +16,6 @@ export const DeploymentCard: React.FC<DeploymentCardProps> = ({
   title, 
   status, 
   previewUrl, 
-  githubUrl, 
   previewImage, 
   timestamp, 
   comments = [],
@@ -50,20 +49,12 @@ export const DeploymentCard: React.FC<DeploymentCardProps> = ({
       </CardHeader>
       <CardContent className="p-3 pt-0">
         <div className="flex items-center justify-between mb-2">
-          <div className="flex space-x-2">
-            <Button asChild variant="outline" size="sm" className="h-8">
-              <a href={previewUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Visit
-              </a>
-            </Button>
-            <Button asChild variant="outline" size="sm" className="h-8">
-              <a href={githubUrl} target="_blank" rel="noopener noreferrer">
-                <Github className="mr-2 h-4 w-4" />
-                GitHub
-              </a>
-            </Button>
-          </div>
+          <Button asChild variant="outline" size="sm" className="h-8">
+            <a href={previewUrl} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Visit Preview
+            </a>
+          </Button>
           <Button
             variant="ghost"
             size="sm"

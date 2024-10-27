@@ -8,7 +8,9 @@ import { Deployment } from '@/types/Deployment'
 interface CardFormProps {
   deployment?: Omit<Deployment, 'id' | 'timestamp' | 'comments'>
   onSubmit: (formData: Omit<Deployment, 'id' | 'timestamp' | 'comments'>) => void
-  onCancel: () => void
+  onCancel: () => 
+
+ void
 }
 
 export const CardForm: React.FC<CardFormProps> = ({ deployment, onSubmit, onCancel }) => {
@@ -16,7 +18,6 @@ export const CardForm: React.FC<CardFormProps> = ({ deployment, onSubmit, onCanc
     title: deployment?.title || '',
     status: deployment?.status || '🟢',
     previewUrl: deployment?.previewUrl || '',
-    githubUrl: deployment?.githubUrl || '',
     previewImage: deployment?.previewImage || 'https://i.ibb.co/Gs1VTpj/image.png',
   })
 
@@ -58,16 +59,6 @@ export const CardForm: React.FC<CardFormProps> = ({ deployment, onSubmit, onCanc
             type="url"
             value={formData.previewUrl}
             onChange={(e) => setFormData({ ...formData, previewUrl: e.target.value })}
-            className="h-8 text-sm"
-          />
-        </div>
-        <div className="space-y-1">
-          <label className="text-sm font-medium" htmlFor="githubUrl">GitHub URL</label>
-          <Input
-            id="githubUrl"
-            type="url"
-            value={formData.githubUrl}
-            onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
             className="h-8 text-sm"
           />
         </div>
