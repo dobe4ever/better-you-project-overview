@@ -51,7 +51,7 @@ export default function DeploymentDashboard() {
       id: '2',
       title: "New header design (in progress)",
       status: "🟡",
-      previewUrl: "https://vitejs-node-ts-tailwind-better-y-git-30f03f-dobe4evers-projects.vercel.app/",
+      previewUrl: "https://better-you-app-nextjs.vercel.app/",
       previewImage: "https://i.ibb.co/JmvrN4H/image.png",
       timestamp: "2023-10-27T11:06:38.000Z",
       comments: []
