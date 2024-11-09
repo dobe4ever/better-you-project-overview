@@ -120,7 +120,6 @@ export default function DeploymentDashboard() {
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">
                 <Code className="mr-2 h-4 w-4" />
-                Dev Links
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
@@ -163,7 +162,6 @@ export default function DeploymentDashboard() {
 
         {/* Main App Section */}
         <div className="mb-4">
-          <h2 className="text-lg font-semibold mb-2">Main App</h2>
           {mainApp.map((deployment) => (
             editingId === deployment.id ? (
               <CardForm
