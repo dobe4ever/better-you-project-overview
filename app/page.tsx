@@ -43,26 +43,17 @@ export default function DeploymentDashboard() {
       comments: [
         {
           text: "Latest production build",
-          timestamp: "2023-10-27T11:06:38.000Z"
+          timestamp: "2023-10-27"
         }
       ]
     },
     {
       id: '2',
-      title: "New header design (in progress)",
+      title: "New Home Page",
       status: "🟡",
       previewUrl: "https://better-you-app-nextjs.vercel.app/",
       previewImage: "https://i.ibb.co/JmvrN4H/image.png",
-      timestamp: "2023-10-27T11:06:38.000Z",
-      comments: []
-    },
-    {
-      id: '3',
-      title: "Search box header (old)",
-      status: "🔴",
-      previewUrl: "https://better-you-everyday-k9qarfpjo-dobe4evers-projects.vercel.app/",
-      previewImage: "https://i.ibb.co/C9SWMVy/image.png",
-      timestamp: "2023-10-27T11:06:38.000Z",
+      timestamp: "2023-11-10",
       comments: []
     }
   ])
