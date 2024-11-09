@@ -150,10 +150,6 @@ export default function DeploymentDashboard() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button size="sm" onClick={() => setShowForm(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Add
-          </Button>
         </div>
       </div>
 
